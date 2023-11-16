@@ -2,10 +2,15 @@ from flask import render_template, Flask, request, redirect, session, url_for
 import re
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.service import Service
+# from selenium.webdriver.chrome.options import Options as ChromeOption
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import NoSuchWindowException
+
+# from webdriver_manager.chrome import ChromeDriverManager
 import os
 
 app = Flask(__name__)
@@ -35,8 +40,15 @@ def check():
         if re.search(pattern, regNo):
             url = 'http://www.sdnbvc.com/sdnbvc/website2015/htmls/semapr23.aspx'
             
+
+            #customizing the chrome browser
+            chrome_options = webdriver.ChromeOptions()
+            chrome_options.add_argument('--headless')
+            chrome_options.add_argument('--no-sandbox')
+            chrome_options.add_argument('--disable-dev-shm-usage')
+            # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=chrome_options)
+            driver = webdriver.Chrome(options=chrome_options)
             # -------wait for the webpage load---
-            driver = webdriver.Chrome()
             driver.get(url)
             webpage = WebDriverWait(driver, 10)
             
